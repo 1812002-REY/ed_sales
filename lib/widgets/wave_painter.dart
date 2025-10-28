@@ -20,12 +20,16 @@ class WavePainter extends CustomPainter {
 
     // Create wave at the bottom using quadratic bezier
     path.quadraticBezierTo(
-      size.width * 0.75, size.height, // control point
-      size.width * 0.5, size.height * 0.7, // end point
+      size.width * 0.75,
+      size.height, // control point
+      size.width * 0.5,
+      size.height * 0.7, // end point
     );
     path.quadraticBezierTo(
-      size.width * 0.25, size.height * 0.4, // control point
-      0, size.height * 0.7, // end point
+      size.width * 0.25,
+      size.height * 0.4, // control point
+      0,
+      size.height * 0.7, // end point
     );
 
     // Close back to top-left

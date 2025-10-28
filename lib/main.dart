@@ -1,25 +1,26 @@
+import 'package:ed_sales/constants.dart';
+import 'package:ed_sales/screens/softnet_login_page.dart';
 import 'package:flutter/material.dart';
-import 'screens/softnet_login_page.dart';
-import 'screens/test.dart';
+import 'package:get/get.dart';
 
+import 'services/utils.dart';
 
 void main() {
-runApp(ed_sales());
+  // AppUtils.decryptUrls();
+  runApp(ed_sales());
 }
-
 
 class ed_sales extends StatelessWidget {
-@override
-Widget build(BuildContext context) {
-return MaterialApp(
-title: 'SoftNet Login',
-theme: ThemeData(
-primarySwatch: Colors.blue,
-fontFamily: 'Roboto',
-),
-home: SoftNetLoginPage(),
-// home: TestScreen(),
-debugShowCheckedModeBanner: false,
-);
-}
+  const ed_sales({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: 'SoftNet Login',
+      home: SoftNetLoginPage(),
+      theme: appTheme,
+      // home: TestScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }

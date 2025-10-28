@@ -15,8 +15,10 @@ class TopWavePainter extends CustomPainter {
 
     // Wave steep to the right
     path.quadraticBezierTo(
-      size.width * 0.25, size.height, // control point
-      size.width, size.height * 0.6,  // end point
+      size.width * 0.25,
+      size.height, // control point
+      size.width,
+      size.height * 0.6, // end point
     );
 
     // Right edge up
@@ -44,8 +46,10 @@ class BottomWavePainter extends CustomPainter {
 
     // Wave steep to the left but upside down
     path.quadraticBezierTo(
-      size.width * 1.5, size.height, // control point pulled down & centered
-      size.width, size.height * 0.9,  // end point
+      size.width * 1.5,
+      size.height, // control point pulled down & centered
+      size.width,
+      size.height * 0.9, // end point
     );
 
     // Top edge

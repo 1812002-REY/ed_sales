@@ -1,0 +1,14 @@
+{
+        "requestID": 2,
+        "requestedBy": 47,
+        "noOfDeviceRequested": 18,
+        "dateRequested": "2021-10-18T13:00:01.36",
+        "userCreated": 0,
+        "officeRequesting": 17,
+        "approvedBy": 44,
+        "updatedBy": 44,
+        "dateModified": "2021-11-24T13:31:25.84",
+        "noOfDeviceApproved": 18,
+        "isApproved": 1,
+        "rejectReason": null
+    }

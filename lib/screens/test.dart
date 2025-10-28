@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/top_bottom_curve.dart';
-import '../widgets/wave_painter.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});

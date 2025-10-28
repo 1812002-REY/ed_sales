@@ -1,6 +1,16 @@
-import 'package:ed_sales/screens/softnet_login_page.dart';
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
+import 'package:ed_sales/constants.dart';
+import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../services/controller/Efd_controller.dart';
+import '../services/controller/login_controller.dart';
+import '../services/controller/vfd_controller.dart';
+import '../services/models/notification.dart';
+import '../services/repository/Efd_service.dart';
+import '../services/repository/vfd_service.dart';
+import '../services/utils.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -10,136 +20,188 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  bool isLoading = true;
-  List<Map<String, String>> notifications = [
-    {"title": "23233326787982", "body": "No status yet.", "time": "Today"},
-    {"title": "23233326787983", "body": "Shipped.", "time": "Yesterday"},
-    {"title": "23233326787984", "body": "Delivered.", "time": "2 days ago"},
-    {"title": "23233326787985", "body": "In transit.", "time": "3 days ago"},
-    {
-      "title": "23233326787986",
-      "body": "Out for delivery.",
-      "time": "4 days ago",
-    },
-    {"title": "23233326787987", "body": "No status yet.", "time": "5 days ago"},
-    {"title": "23233326787988", "body": "Shipped.", "time": "6 days ago"},
-    {"title": "23233326787989", "body": "Delivered.", "time": "1 week ago"},
-    {"title": "23233326787990", "body": "In transit.", "time": "1 week ago"},
-    {
-      "title": "23233326787991",
-      "body": "Out for delivery.",
-      "time": "2 weeks ago",
-    },
-    {
-      "title": "23233326787992",
-      "body": "No status yet.",
-      "time": "2 weeks ago",
-    },
-    {"title": "23233326787993", "body": "Shipped.", "time": "3 weeks ago"},
-    {"title": "23233326787994", "body": "Delivered.", "time": "3 weeks ago"},
-    {"title": "23233326787995", "body": "In transit.", "time": "1 month ago"},
-    {
-      "title": "23233326787996",
-      "body": "Out for delivery.",
-      "time": "1 month ago",
-    },
-    {
-      "title": "23233326787997",
-      "body": "No status yet.",
-      "time": "1 month ago",
-    },
-    {"title": "23233326787998", "body": "Shipped.", "time": "1 month ago"},
-    {"title": "23233326787999", "body": "Delivered.", "time": "1 month ago"},
-    {"title": "23233326788000", "body": "In transit.", "time": "1 month ago"},
-  ];
+  final EfdController efdController = Get.put(EfdController(EfdService()));
+  final VfdController vfdController = Get.put(VfdController(VfdService()));
+  final loginController = Get.find<LoginController>();
+
+  bool isVfd = false; // default EFD
+
   @override
   void initState() {
     super.initState();
-    // simulate loading for 1-2 seconds when page opens
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        isLoading = false; // hide spinner and show notifications
-      });
-    });
+    _loadNotifications();
+  }
+
+  Future<void> _loadNotifications() async {
+    String token = loginController.loginData.single.accessToken ?? '';
+    int officeId = loginController.loginData.single.officeId ?? 0;
+
+    await efdController.getEfdData(token, officeId);
+    await vfdController.getVfdData(token);
+  }
+
+  List<NotificationOffice> _getEfdNotifications() {
+    final efdNotifs = AppUtils.getNotificationsFromEfd(efdController.efdData);
+    efdNotifs.sort((a, b) => b.createDate.compareTo(a.createDate));
+    return efdNotifs;
+  }
+
+  List<NotificationOffice> _getVfdNotifications() {
+    final vfdNotifs = AppUtils.getNotificationsFromVfd(vfdController.vfdData);
+    vfdNotifs.sort((a, b) => b.createDate.compareTo(a.createDate));
+    return vfdNotifs;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
       appBar: AppBar(
-        title: Text("EFD"),
+        backgroundColor: Colors.blueGrey,
+        title: const Text("Notifications",style: TextStyle(color: Colors.white),),
         automaticallyImplyLeading: false,
-
         actions: [
-          PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return [PopupMenuItem(value: 3, child: Text("Logout"), onTap: () => {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SoftNetLoginPage()), (route) => false)
-              })];
-            },
-          )
+          IconButton(
+            icon: const Icon(Icons.refresh,color: Colors.white,),
+            onPressed: _loadNotifications,
+          ),
         ],
       ),
-      body: isLoading
-          ? const Center(
-              child: CupertinoActivityIndicator(radius: 16, color: Colors.white70,),
-            )
-     : Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(onPressed: () {}, child: Text("Refresh")),
-              ],
+      body: Obx(() {
+        if (efdController.isLoading.value || vfdController.isLoading.value) {
+          return const Center(
+            child: CupertinoActivityIndicator(
+              radius: 16,
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: notifications.length,
-                itemBuilder: (context, index) {
-                  final notification = notifications[index];
-                  return Container(
-                    margin: EdgeInsets.symmetric(vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.blueGrey.shade900,
+          );
+        }
 
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: ListTile(
-                      leading: Icon(Icons.notifications),
-                      title: Text(
-                        notification["title"]!,
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 123, 184, 231),
-                          fontWeight: FontWeight.bold,
+        if (efdController.errorMessage.isNotEmpty ||
+            vfdController.errorMessage.isNotEmpty) {
+          return Center(
+            child: Text(
+              efdController.errorMessage.isNotEmpty
+                  ? efdController.errorMessage.value
+                  : vfdController.errorMessage.value,
+              style: const TextStyle(color: Colors.redAccent),
+            ),
+          );
+        }
+
+        final notifications =
+            isVfd ? _getVfdNotifications() : _getEfdNotifications();
+
+        if (notifications.isEmpty) {
+          return const Center(
+            child: Text(
+              "No notifications available",
+              style: TextStyle(color: Colors.white70),
+            ),
+          );
+        }
+
+        return Column(
+          children: [
+            const SizedBox(height: 10),
+            // 🔁 Switch Buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _switchButton("EFD", !isVfd, () {
+                    setState(() => isVfd = false);
+                  }),
+                  _switchButton("VFD", isVfd, () {
+                    setState(() => isVfd = true);
+                  }),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // 🔔 Notifications List
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _loadNotifications,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: notifications.length,
+                  itemBuilder: (context, index) {
+                    final notif = notifications[index];
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      decoration: BoxDecoration(
+                        color: awesomeGrey,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.notifications,
+                          color: isVfd ? Colors.black : Colors.black54,
+                        ),
+                        title: Text(
+                          notif.notificationState,
+                          style: TextStyle(
+                            color:Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              notif.deviceSerialNumber,
+                            ),
+                            Text(
+                              notif.notificationState.isEmpty
+                                  ? "No Status yet"
+                                  : "Device is ready for ${notif.notificationState}",
+                              style: const TextStyle(color: Colors.blueGrey),
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.access_time,
+                              size: 16,
+                              color: Colors.black,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              notif.formattedDate,
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                          ],
                         ),
                       ),
-                      subtitle: Text(
-                        notification["body"]!,
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.access_time, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            notification["time"]!,
-                            style: TextStyle(
-                              color: const Color.fromARGB(255, 247, 244, 244),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
+        );
+      }),
+    );
+  }
+
+  Widget _switchButton(String label, bool active, VoidCallback onTap) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: active ? Colors.blueGrey : awesomeGrey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        fixedSize: Size(
+          MediaQuery.of(context).size.width / 2 - 24,
+          MediaQuery.of(context).size.height * 0.045,
         ),
+      ),
+      onPressed: onTap,
+      child: Text(
+        label,
+        style: TextStyle(color: active ? Colors.white : Colors.black,fontSize: 14),
       ),
     );
   }

@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+import '../services/models/efd_device.dart';
+
+class InvoiceTopBar extends StatelessWidget {
+  final EfdDevice? efdDevice; // allow nullable
+
+  const InvoiceTopBar({Key? key, this.efdDevice}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final serial = efdDevice?.serialNumber ?? 'Unknown Invoice';
+    final invoiceNo = efdDevice?.invoiceNumber ?? 'N/A';
+    return Container(
+      width: double.infinity,
+      color: blueGrey,
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Image.asset('assets/pos.png', width: 50, height: 50),
+          const SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(serial, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(invoiceNo, style: const TextStyle(color: Colors.white70)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

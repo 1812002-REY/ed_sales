@@ -1,3 +1,5 @@
+import 'package:ed_sales/constants.dart';
+import 'package:ed_sales/services/models/efd_device.dart';
 import 'package:flutter/material.dart';
 
 class HomeTopBar extends StatelessWidget {
@@ -9,7 +11,7 @@ class HomeTopBar extends StatelessWidget {
       children: [
         ClipPath(
           clipper: WaveClipper(),
-          child: Container(height: 200, color: Colors.green),
+          child: Container(height: 200, color: Colors.blueGrey),
         ),
         Positioned(
           left: 20,
@@ -19,7 +21,7 @@ class HomeTopBar extends StatelessWidget {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Colors.green, size: 60),
+                child: Icon(Icons.person, color: Colors.blueGrey, size: 60),
               ),
               const SizedBox(width: 15),
               Column(

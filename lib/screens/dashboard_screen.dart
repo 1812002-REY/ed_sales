@@ -1,3 +1,4 @@
+import 'package:ed_sales/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'device_screen.dart';
@@ -14,7 +15,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-
   Widget _buildBody() {
     switch (_selectedIndex) {
       case 0:
@@ -30,9 +30,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: awesomeGrey,
+        selectedItemColor: Colors.blueGrey,
         currentIndex: _selectedIndex,
         onTap: (int index) {
           setState(() {
@@ -40,17 +42,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           });
         },
         items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.devices), label: "Device"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.devices),
-            label: "Device",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.notifications,),
             label: "Notifications",
+            backgroundColor: Colors.white
           ),
         ],
       ),

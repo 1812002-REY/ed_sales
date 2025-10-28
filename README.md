@@ -14,8 +14,9 @@ Install Flutter SDK
 .
 
 Clone the project:
-
+```bash
 git clone https://github.com/your-username/ed_sales.git
+```
 
 
 Navigate to the project folder:

@@ -1,16 +1,55 @@
-# ed_sales
+EFD Sales App
 
-A new Flutter project.
+EFD Sales is a Flutter application designed to help businesses manage electronic fiscal device (EFD) sales easily and efficiently.
+It allows users to record, view, and manage sales transactions digitally.
 
-## Getting Started
+🚀 Getting Started
 
-This project is a starting point for a Flutter application.
+This project is built using Flutter.
+Follow the steps below to set it up and run on your device.
 
-A few resources to get you started if this is your first Flutter project:
+Steps to Run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Install Flutter SDK
+.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Clone the project:
+
+git clone https://github.com/your-username/ed_sales.git
+
+
+Navigate to the project folder:
+
+cd ed_sales
+
+
+Get all dependencies:
+
+flutter pub get
+
+
+Run the app:
+
+flutter run
+
+📱 Features
+
+🧾 Manage and record EFD sales
+
+💰 View and track daily transactions
+
+📊 Generate invoices and receipts
+
+👨‍💼 User login and role-based access
+
+⚙️ Simple and user-friendly interface
+
+🛠️ Built With
+
+Flutter – Cross-platform framework
+
+Dart – Programming language
+
+GetX / Provider – State management
+
+REST API – For backend communication
